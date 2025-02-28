@@ -63,6 +63,7 @@ import javafx.scene.layout.VBox
 import model.Color
 import model.TipusOperacio
 import org.example.utils.NumeroMagicController.encertat
+import java.awt.Font
 
 class NumeroMagicJavaFXAPI: Application() {
 
@@ -73,26 +74,51 @@ class NumeroMagicJavaFXAPI: Application() {
 
         // Declarem els elements que tindrà el nostre formulari
         val lblCapcalera = Label("Introdueix el teu número:")
-        val txtNumeroUsuari = TextField()
+        val lblNumeroUsuari = Label("50")
+        val btnMenys10 = Button("-10")
+        val btnMenys1 = Button("-1")
         val btnJugar = Button("JUGAR!")
+        val btnMes1 = Button("+1")
+        val btnMes10 = Button("+10")
         val btnTornarJugar = Button("TORNAR A JUGAR!")
         btnTornarJugar.isVisible = false
         val lblMissatge = Label("el número és: $numeroMagic")   //xivato per poder jugar
         val lblNumeroIntents = Label("Et queden $numeroIntents intents")
 
+        btnMenys10.setOnAction {
+            if(lblNumeroUsuari.text.toInt()>=10)
+                lblNumeroUsuari.text = (lblNumeroUsuari.text.toInt() - 10).toString()
+        }
+        btnMenys1.setOnAction {
+            if(lblNumeroUsuari.text.toInt()>=1)
+            lblNumeroUsuari.text = (lblNumeroUsuari.text.toInt() - 1).toString()
+        }
+        btnMes1.setOnAction {
+            if(lblNumeroUsuari.text.toInt()<=99)
+            lblNumeroUsuari.text = (lblNumeroUsuari.text.toInt() + 1).toString()
+        }
+        btnMes10.setOnAction {
+            if(lblNumeroUsuari.text.toInt()<=90)
+            lblNumeroUsuari.text = (lblNumeroUsuari.text.toInt() + 10).toString()
+        }
+
         /* Definim el comportament de les accions de l'acció clickar damunt de cadascun dels botons */
         btnJugar.setOnAction {
-            if(esNumeric(txtNumeroUsuari)) {
+//            if(esNumeric(txtNumeroUsuari)) {
                 numeroIntents--
                 if(numeroIntents>0) {
-                    val numeroUsuari = txtNumeroUsuari.text.toInt()
+                    val numeroUsuari = lblNumeroUsuari.text.toInt()
                     val resultat: Pair<Boolean, String> = encertat(numeroMagic, numeroUsuari)
                     lblMissatge.text = resultat.second
                     if(resultat.first){
                         // un cop finalitzada la partida, amaguem i mostrem els botons que correspon
                         lblCapcalera.isVisible = false
-                        txtNumeroUsuari.isVisible = false
+                        lblNumeroUsuari.isVisible = false
+                        btnMenys10.isVisible = false
+                        btnMenys1.isVisible = false
                         btnJugar.isVisible = false
+                        btnMes10.isVisible = false
+                        btnMes1.isVisible = false
                         lblNumeroIntents.isVisible = false
                         btnTornarJugar.isVisible = true
                     }
@@ -101,44 +127,62 @@ class NumeroMagicJavaFXAPI: Application() {
                     // un cop finalitzada la partida, amaguem i mostrem els botons que correspon
                     lblCapcalera.isVisible = false
                     lblNumeroIntents.text = "T'has quedat sense intents, el número era $numeroMagic"
+                    btnMenys10.isVisible = false
+                    btnMenys1.isVisible = false
                     btnJugar.isVisible = false
+                    btnMes10.isVisible = false
+                    btnMes1.isVisible = false
                     lblMissatge.isVisible = false
-                    txtNumeroUsuari.isVisible = false
+                    lblNumeroUsuari.isVisible = false
                     btnTornarJugar.isVisible = true
                 }
-            } else {
+/*            } else {
                 lblMissatge.text = "El valor introduït no és numèric"
-            }
+            }*/
         }
 
         // Tornem a generar els valors inicials i a mostrar els elements que han de ser visibles
         btnTornarJugar.setOnAction {
             numeroMagic = (0..100).random()
             numeroIntents = 5
-            txtNumeroUsuari.text = ""
+            lblNumeroUsuari.text = "50"
             lblCapcalera.isVisible = true
-            txtNumeroUsuari.isVisible = true
+            lblNumeroUsuari.isVisible = true
+            btnMenys10.isVisible = true
+            btnMenys1.isVisible = true
             btnJugar.isVisible = true
+            btnMes10.isVisible = true
+            btnMes1.isVisible = true
             lblMissatge.isVisible = true
             lblMissatge.text = "el número és: " + numeroMagic   //xivato per poder jugar
             lblNumeroIntents.isVisible = true
             btnTornarJugar.isVisible = false
         }
 
+        val filaButons = HBox(5.0)
+        filaButons.padding = Insets(10.0) // Aquesta línia estableix un marge intern (padding) de 10 píxels a tots els costats del contenidor VBox.
+        filaButons.children.addAll(
+            btnMenys10,
+            btnMenys1,
+            btnJugar,
+            btnMes1,
+            btnMes10
+        )
+
         // Definim un container vertical (una columna d'elements a mostrar a la GUI)
         val vBox = VBox(10.0)
         vBox.padding = Insets(20.0) // Aquesta línia estableix un marge intern (padding) de 20 píxels a tots els costats del contenidor VBox.
         vBox.children.addAll(
             lblCapcalera,
-            txtNumeroUsuari,
-            btnJugar, // Li afegim tots els elements de l'horitzontal box que hem creat abans
+            lblNumeroUsuari,
+            filaButons, // Li afegim tots els elements de l'horitzontal box que hem creat abans
             btnTornarJugar,
             lblMissatge,
             lblNumeroIntents
         )
 
         // Definim la finestra emergent amb el seu contingut vbox i la seva mida en píxels horitzontal i vertical
-        val scene = Scene(vBox, 350.0, 200.0)
+        val scene = Scene(vBox, 350.0, 225.0)
         // Definim el títol que es mostrarà a la finestra emergent
         primerStage.icons.add(Image("icon.png"))
         primerStage.title = "Encerta el número!"
@@ -147,6 +191,7 @@ class NumeroMagicJavaFXAPI: Application() {
         // Fem que aparegui la finestra de la GUI
         primerStage.isResizable = false
         primerStage.show()
+        lblNumeroUsuari.style = "-fx-font-size: 20px; -fx-font-weight: bold;"
     }
 
     private fun esNumeric(textField: TextField): Boolean {
