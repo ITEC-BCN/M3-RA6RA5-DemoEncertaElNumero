@@ -194,17 +194,4 @@ class NumeroMagicJavaFXAPI: Application() {
         lblNumeroUsuari.style = "-fx-font-size: 20px; -fx-font-weight: bold;"
     }
 
-    private fun esNumeric(textField: TextField): Boolean {
-        var esNumero: Boolean = true
-        var numero: Int
-
-        try {
-            numero = textField.text.toInt()
-        }catch (e: NumberFormatException){
-            esNumero = false
-        }
-
-        return esNumero
-    }
-
 }
